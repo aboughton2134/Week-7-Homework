@@ -1,0 +1,87 @@
+#Author: Alisha Boughton
+#Description:
+#Your program must prompt the user for their city or zip code and request weather forecast data from openweathermap.org.  
+#Your program must display the weather information in an READABLE format to the user.
+
+#Requirements: 
+#	Create a Python Application which asks the user for their zip code or city.
+
+#	Use the zip code or city name in order to obtain weather forecast data from: http://openweathermap.org/
+
+#	Display the weather forecast in a readable format to the user.
+
+#	Use comments within the application where appropriate in order to document what the program is doing.
+
+#	Use functions including a main function.
+	
+#	Allow the user to run the program multiple times.
+	
+#	Validate whether the user entered valid data. If valid data isn’t presented notify the user.
+	
+#	Use the Requests library in order to request data from the webservice.
+	
+#	Use Python 3.
+	
+#	Use try blocks when establishing connections to the webservice. 
+
+#	You must print a message to the user indicating whether or not the connection was successful.
+
+import requests, json
+
+#Request Data
+#These were the two parts that were the hardest for me. My draft had variations of this that didn't work.
+#Part 1
+def getWeather(query):
+    api_key = "e1a48538da6c02fd8a24ebc84dd8b235"
+    base_url = "http://api.openweathermap.org/data/2.5/weather?"
+    complete_url = base_url + "appid=" + api_key + "&" + query
+    res=requests.get(complete_url);
+    return res.json();
+
+#Display Results
+#These were the two parts that were the hardest for me. My draft had variations of this that didn't work.
+#Part 2
+def returnResults(weathers,city):
+    print("{}'s temperature: {}°C ".format(city,weathers['main']['temp']))
+    print("Wind speed: {} m/s".format(weathers['wind']['speed']))
+    print("Description: {}".format(weathers['weather'][0]['description']))
+    print("Weather: {}".format(weathers['weather'][0]['main']))
+
+def runAgain():
+    while True:
+        runAagain = input("Would you like to enter another city or zipcode?")
+        if  runAgain in ['y','Y','yes','Yes','YES']:
+            city=input('Enter the zipcode or cityname:')
+            print()
+
+            try:
+                query='q='+city;
+                w_data=getWeather(query);
+                returnResults(w_data, city)
+                print()
+                pass
+            except:
+                print('Sorry, this city was not found.')
+        elif runAgain in ['n','N','no','No','NO']:
+            return
+        else:
+            print("Error. Wrong value.")
+            pass
+
+def main():
+    city=input('Enter the zipcode or cityname:')
+    print()
+
+    try:
+        query='q='+city;
+        w_data=getWeather(query);
+        returnResults(w_data, city)
+        print()
+    except:
+        print('Sorry, this city was not found.')
+    
+    runAgain()
+    
+
+if __name__=='__main__':
+    main()
